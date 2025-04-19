@@ -1,26 +1,104 @@
-import AboutMe from "./components/AboutMe"
+import React, { useState, useEffect } from "react";
+import { createBrowserRouter, RouterProvider, Link } from "react-router";
+
+import Layout from "./components/layout/Layout";
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFount";
+import Products from "./components/product/Products";
+import Product from "./components/product/Product";
+import NewProduct from "./components/product/NewProduct";
+import EditProduct from "./components/product/EditProduct";
+// import Users from "./components/user/users";
 
 export default function App() {
-  return (
-    <>
-      <div className="h-screen flex justify-center bg-blue-950">
-      <div className="p-6 gap-y-6 flex flex-col justify-start w-[80%] lg:w-[70%]">
-        <h1 className="w-full p-6 bg-amber-100 font-extrabold text-blue-500">
-          React App Starter
-        </h1>
-        <section className="w-full p-5 bg-amber-100 flex">
-          <ul className="list-inside list-disc flex-1">
-            <span className="font-semibold text-orange-400">Tech Stack:</span>
-            <li>Vite</li>
-            <li>React</li>
-            <li>JavaScript</li>
-            <li>Tailwind</li>
-          </ul>
-        </section>
-        <hr />
-        <AboutMe name="Sanyalak"/>
-      </div>
-    </div>
-    </>
-  )
+  // endpoint from mock up API.
+  const endpoint = "https://67f9f0e3094de2fe6ea2b617.mockapi.io/products";
+
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    // get products from mock data
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(endpoint);
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+              // console.log(data);
+        setProducts(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    useEffect(() => {
+      fetchData();
+    }, []);
+
+    if (loading) {
+      return <div className="italic text-center">Loading data...</div>;
+    }
+
+    if (error) {
+      return (
+        <div className="flex flex-col justify-center items-center">
+          <h2 className="text-red-600">Something went wrong!</h2>
+          <p className="text-red-600">Please contact support@support.com</p>
+        </div>
+      );
+    }
+
+    // delete a product
+    const onDelete = async (id) => {
+      if (confirm("Are you sure delete this record?")) {
+        try {
+            setLoading(true);
+            await fetch(`${endpoint}/${id}`, {
+              method: 'DELETE',
+            });
+            const response = await fetch(endpoint);
+            if (!response.ok) {
+              throw new Error("Failed to fetch data");
+            }
+            const data = await response.json();
+            // console.log(data);
+            setProducts(data.filter(product => product.product_id !== id));
+          } catch (err) {
+            console.error('Delete error:', err);
+          }finally {
+            setLoading(false);
+          }
+      }
+    }
+
+    // router of app
+    const router = createBrowserRouter([
+      {
+        path: "/", element: <Layout />,
+
+        children: [
+          {path: "home", element: <Home />},
+          {path: "*", element: <NotFound />},
+          // route of products
+          {path: "products",
+            element: <Products
+            products={products}
+            onDelete={onDelete}
+          />},
+          {path: "products/:productId", element: <Product products={products} />},
+          {path: "newproduct", element: <NewProduct />},
+          {path: "edit/:productId", element: <EditProduct products={products} />},
+
+          // route of users
+          // {path: "users", element: <Users />},
+        ]
+      }
+    ]);
+
+  return <RouterProvider router={router} />;
 }
