@@ -6,27 +6,37 @@ import {
   createBrowserRouter,
   RouterProvider,
   Link,
+  BrowserRouter,
+  Routes,
+  Route,
 } from "react-router";
 
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFount";
+import Login from "./pages/Login";
 
 export default function App() {
   // endpoint from mock up API.
   // const endpoint = "https://67f9f0e3094de2fe6ea2b617.mockapi.io/products";
-
   // router of app
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Home />,
-
-      children: [
-        { path: "home", element: <Home /> },
-        { path: "*", element: <NotFound /> },
-      ],
-    },
-  ]);
-
-  return <RouterProvider router={router} />;
+  // const router = createBrowserRouter([
+  //   {
+  //     path: "/",
+  //     element: <Home />,
+  //     children: [
+  //       { path: "/login", element: <Login /> },
+  //       { path: "*", element: <NotFound /> },
+  //     ],
+  //   },
+  // ]);
+  // return <RouterProvider router={router} />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="*" element={<NotFound />} />
+        <Route path="/home" element={<Home />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
