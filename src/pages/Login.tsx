@@ -1,24 +1,52 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router";
+import { useAuth } from "../contexts/AuthContext";
 // import {
 //   loginUser,
 //   getProfile,
 // } from "../services/authService";
 // import { useAuth } from "../context/AuthContext";
 
+// interface LoginForm {
+//   email: string;
+//   password: string;
+// }
+
 const Login = () => {
   const navigate = useNavigate();
-
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  //   const { setUser } = useAuth();
 
-  const handleLogin = async (event: any) => {
-    event.preventDefault();
-    setError("");
-    setLoading(true);
+  // const [form, setForm] = useState<LoginForm>({
+  //   email: "",
+  //   password: "",
+  // });
+  // const handleChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setForm({
+  //     ...form,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
+
+  const handleLogin = async (
+    e: React.FormEvent
+  ) => {
+    e.preventDefault();
+    console.log("Login");
+    // call api or function this here.
+    try {
+      setLoading(true);
+      await login(email, password);
+      navigate("/dashboard");
+    } catch (err) {
+      setError("Error failed" + err);
+    }
 
     // try {
     //   const data = await loginUser({
@@ -86,7 +114,7 @@ const Login = () => {
               onChange={(e) =>
                 setEmail(e.target.value)
               }
-              //   required
+              required
               autoFocus
               placeholder="Enter Email"
             />
@@ -107,9 +135,9 @@ const Login = () => {
               onChange={(e) =>
                 setPassword(e.target.value)
               }
-              //   required
+              required
               placeholder="Enter Password"
-              //minLength="5"
+              // minLength="5"
               //maxLength="8"
             />
           </div>

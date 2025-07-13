@@ -11,9 +11,10 @@ import {
   Route,
 } from "react-router";
 
-import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFount";
 import Login from "./pages/Login";
+import { AuthProvider } from "./contexts/AuthContext";
 
 export default function App() {
   // endpoint from mock up API.
@@ -31,12 +32,20 @@ export default function App() {
   // ]);
   // return <RouterProvider router={router} />;
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="*" element={<NotFound />} />
-        <Route path="/home" element={<Home />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route
+            path="*"
+            element={<NotFound />}
+          />
+          <Route
+            path="/dashboard"
+            element={<Dashboard />}
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
