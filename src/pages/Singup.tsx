@@ -1,78 +1,36 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router";
-import { useAuth } from "../contexts/AuthContext";
-// import {
-//   loginUser,
-//   getProfile,
-// } from "../services/authService";
-// import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+// import "../utils/login.css";
+// import { signupUser } from "../services/authService";
 
-// interface LoginForm {
-//   email: string;
-//   password: string;
-// }
-
-const Login = () => {
+const Signup = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // const [form, setForm] = useState<LoginForm>({
-  //   email: "",
-  //   password: "",
-  // });
-  // const handleChange = (
-  //   e: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   setForm({
-  //     ...form,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // };
-
-  const handleLogin = async (
+  const handleSubmit = async (
     e: React.FormEvent
   ) => {
     e.preventDefault();
-    console.log("Login");
-    // call api or function this here.
+    setError("");
+    setLoading(true);
+
     try {
-      setLoading(true);
-      await login(email, password);
-      navigate("/dashboard");
+      // const data = await signupUser({userName, email, password});
+      console.log("singup");
+      navigate("/");
     } catch (err) {
-      setError("Error failed" + err);
+      console.error(err);
+      setError(
+        "Register failed. Please try again."
+      ); //err?.response?.data?.message ||
+    } finally {
+      setLoading(false);
     }
-
-    // try {
-    //   const data = await loginUser({
-    //     email,
-    //     password,
-    //   });
-
-    //   if (data.token) {
-    //     localStorage.setItem("token", data.token);
-
-    //     const profile = await getProfile(); // ดึงจาก authService
-    //     setUser(profile.user); // ✅ Context จะ trigger render ทั่วแอป
-
-    //     navigate("/");
-    //   }
-
-    //   navigate("/home"); // Redirect after successful login
-    // } catch (err) {
-    //   console.error(err);
-    //   setError(
-    //     err?.response?.data?.message ||
-    //       "Login failed. Please try again."
-    //   );
-    // } finally {
-    //   setLoading(false);
-    // }
   };
 
   return (
@@ -83,10 +41,10 @@ const Login = () => {
       ></div>
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-3xl font-bold text-gray-700 text-center">
-          &#128102; User App.
+          Parcels App. 📝
         </h1>
         <h2 className="font-bold text-gray-500 text-center py-2">
-          Login to Your Account
+          create user name, email and password
         </h2>
 
         {error && (
@@ -95,10 +53,27 @@ const Login = () => {
           </div>
         )}
 
-        <form
-          onSubmit={handleLogin}
-          className="space-y-4"
-        >
+        <form className="space-y-4">
+          <div>
+            <label
+              htmlFor="userName"
+              className="block text-sm font-medium text-gray-900"
+            >
+              User Name
+            </label>
+            <input
+              id="userName"
+              type="userName"
+              className="mt-1 block w-full p-2 border border-black rounded-md focus:outline outline-blue-500 focus:border-blue-500"
+              value={userName}
+              onChange={(e) =>
+                setUserName(e.target.value)
+              }
+              //   required
+              autoFocus
+              placeholder="Enter Email"
+            />
+          </div>
           <div>
             <label
               htmlFor="email"
@@ -114,7 +89,7 @@ const Login = () => {
               onChange={(e) =>
                 setEmail(e.target.value)
               }
-              required
+              //   required
               autoFocus
               placeholder="Enter Email"
             />
@@ -135,40 +110,31 @@ const Login = () => {
               onChange={(e) =>
                 setPassword(e.target.value)
               }
-              required
+              //   required
               placeholder="Enter Password"
-              // minLength="5"
-              //maxLength="8"
+              //   minLength="5"
+              //   maxLength="8"
             />
           </div>
 
           <button
-            type="submit"
+            onClick={handleSubmit}
             disabled={loading}
             className="w-[100%] bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition duration-300"
           >
             <div className="w-full bg-blue-600 hover:bg-blue-700 text-center text-white font-semibold py-2 rounded-md transition duration-300">
-              Login!
+              Signup!
             </div>
           </button>
         </form>
 
         <p className="text-center text-sm text-gray-500 mt-4">
-          Don't have an account?{" "}
+          Back to Login Page!{" "}
           <Link
-            to="signup"
+            to="/"
             className="text-blue-600 hover:underline"
           >
-            Sign up
-          </Link>
-        </p>
-        <p className="text-center text-sm text-gray-500 mt-4">
-          Forget password?{" "}
-          <Link
-            to="/forgotpassword"
-            className="text-blue-600 hover:underline"
-          >
-            Forget password
+            login
           </Link>
         </p>
       </div>
@@ -176,4 +142,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
