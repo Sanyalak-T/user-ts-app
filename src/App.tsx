@@ -15,6 +15,7 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFount";
 import Login from "./pages/Login";
 import Signup from "./pages/Singup";
+import ForgotPassword from "./pages/ForgotPassword";
 import { AuthProvider } from "./contexts/AuthContext";
 
 export default function App() {
@@ -48,6 +49,10 @@ export default function App() {
           <Route
             path="/signup"
             element={<Signup />}
+          />
+          <Route
+            path="/forgotpassword"
+            element={<ForgotPassword />}
           />
         </Routes>
       </BrowserRouter>

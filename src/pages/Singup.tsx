@@ -41,7 +41,7 @@ const Signup = () => {
       ></div>
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-3xl font-bold text-gray-700 text-center">
-          Parcels App. 📝
+          &#128102; Parcels App.
         </h1>
         <h2 className="font-bold text-gray-500 text-center py-2">
           create user name, email and password
